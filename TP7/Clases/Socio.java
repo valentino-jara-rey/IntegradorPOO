@@ -69,7 +69,7 @@ public abstract class Socio {
      * Setter del atributo diasPrestamo
      * @param p_dias
      */
-    private void setDiasPrestamos(int p_dias){
+    protected void setDiasPrestamos(int p_dias){
         this.diasPrestamo = p_dias;
     }
 
@@ -126,13 +126,14 @@ public abstract class Socio {
      * @return devuelve false si hay almenos un prestamo vencido, caso contrario false
      */
     public boolean puedePedir(){
-        boolean cantidadVencidos = true;
+        boolean ningunoVencido = true;
+        Calendar fechaHoy = Calendar.getInstance();
         for(Prestamo prestamo : this.getPrestamos()){
-            if (prestamo.vencido()) {
-               cantidadVencidos = false;
+            if(prestamo.vencido(fechaHoy)){
+                ningunoVencido = false;
             }
         }
-        return cantidadVencidos;
+        return ningunoVencido;
     }
 
     /**    
