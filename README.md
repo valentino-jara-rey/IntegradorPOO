@@ -18,9 +18,9 @@
 - Isler Mendiaz, Magno Exequiel
 ---
 ### Índice 
-- [Clases](tp7/Clases)
-- [Interfaces](tp7/Interfaz)
-- [Base de datos SQL](tp7/SQL)
+- [Clases](TP7/Clases)
+- [Interfaces](TP7/Interfaz)
+- [Base de datos SQL](TP7/SQL)
 
 
 ## 📂Estructura del repositorio
