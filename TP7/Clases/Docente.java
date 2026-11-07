@@ -1,6 +1,11 @@
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/** 
+* clase que representa la abtraccion de un docente
+* @autor Lezcano Axel Antonio 
+*/
+
 public class Docente extends Socio{
     private String area;
 
@@ -41,27 +46,38 @@ public class Docente extends Socio{
     }
 
   //metodos
+    /**
+    * Metodo que verifica que un Docente sea responsable
+    * @return esResp Devuelve un valor Booleano (True o false)
+    */
     public boolean esResponsable(){
-      boolean esResponsable = true;
+      boolean esResp = true;
       Calendar fechaHoy = Calendar.getInstance();
       for(Prestamo prestamo: this.getPrestamos()){
         if(prestamo.getFechaDevolucion() != null){
           // se asigna true si el prestamo no estaba vencido al momento de la devolucion
-          esResponsable = !prestamo.vencido(prestamo.getFechaDevolucion());
+          esResp = !prestamo.vencido(prestamo.getFechaDevolucion());
         }else{
           // se asigna true si el prestamo no esta vencido a dia de hoy
-          esResponsable = !prestamo.vencido(fechaHoy);
+          esResp = !prestamo.vencido(fechaHoy);
         }
       }
-      return esResponsable;
+      return esResp;
     }
 
+    /**
+    * Metodo que agrega dias de prestamos si es responsable
+    * @param p_dias
+    */    
     public void cambiarDiasDePrestamos(int p_dias){
         if(this.esResponsable()){
           this.setDiasPrestamos((this.getDiasPrestamo() + p_dias));
         }
     }
 
+    /**
+    *
+    */
     public String soyDeLaClase(){
         return "Docente";
     }
