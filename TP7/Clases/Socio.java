@@ -1,4 +1,8 @@
 import java.util.ArrayList;
+/**
+* Esta clase representa un Socio
+* @author Valentino Jara Rey
+*/
 public abstract class Socio {
     private int dniSocio;
     private String nombre;
