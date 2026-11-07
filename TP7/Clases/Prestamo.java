@@ -1,5 +1,9 @@
 import java.time.Year;
 import java.util.Calendar;
+/**
+* Esta clase representa un Prestamo
+* @author Valentino Jara Rey
+*/
 public class Prestamo {
     private Calendar fechaRetiro;
     private Calendar fechaDevolucion;
