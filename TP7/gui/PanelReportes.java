@@ -7,12 +7,36 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Clase que representa el panel de la interfaz gráfica encargado de mostrar 
+ * los reportes, estadísticas y consultas generales del sistema de la biblioteca.
+ */
 public class PanelReportes extends JPanel {
+    
+    /** Referencia al sistema principal de la biblioteca para obtener los datos */
     private Biblioteca biblioteca;
-    private JLabel lblCantEstudiantes, lblCantDocentes;
-    private JTable tablaDocentesResponsables, tablaPrestamosVencidos;
-    private DefaultTableModel modeloDocentes, modeloVencidos;
+    
+    /** Etiqueta para mostrar la cantidad total de socios de tipo Estudiante */
+    private JLabel lblCantEstudiantes;
+    /** Etiqueta para mostrar la cantidad total de socios de tipo Docente */
+    private JLabel lblCantDocentes;
+    
+    /** Tabla visual para listar a los docentes que no tienen atrasos */
+    private JTable tablaDocentesResponsables;
+    /** Tabla visual para listar los préstamos que han superado su fecha límite */
+    private JTable tablaPrestamosVencidos;
+    
+    /** Modelo de datos para la tabla de docentes responsables */
+    private DefaultTableModel modeloDocentes;
+    /** Modelo de datos para la tabla de préstamos vencidos */
+    private DefaultTableModel modeloVencidos;
 
+    /**
+     * Constructor del panel de reportes. Inicializa los componentes visuales, 
+     * arma la estructura gráfica de tarjetas y carga los datos iniciales.
+     * 
+     * @param biblioteca la instancia principal de la biblioteca con los datos del sistema
+     */
     public PanelReportes(Biblioteca biblioteca) {
         this.biblioteca = biblioteca;
         setLayout(new BorderLayout(15, 15));
@@ -40,6 +64,12 @@ public class PanelReportes extends JPanel {
         actualizarReportes();
     }
 
+    /**
+     * Crea y configura un panel contenedor con tarjetas informativas 
+     * para mostrar las métricas generales (cantidad de estudiantes y docentes).
+     * 
+     * @return JPanel con el diseño de las tarjetas de métricas
+     */
     private JPanel crearPanelTarjetasMetricas() {
         JPanel panelMetricas = new JPanel(new GridLayout(1, 2, 15, 0));
         panelMetricas.setOpaque(false);
@@ -76,6 +106,12 @@ public class PanelReportes extends JPanel {
         return panelMetricas;
     }
 
+    /**
+     * Crea y configura el panel que contiene la tabla de docentes responsables, 
+     * incluyendo su modelo de datos de solo lectura y estilos de encabezado.
+     * 
+     * @return JPanel con estilo de tarjeta conteniendo la tabla de docentes
+     */
     private JPanel crearTablaDocentesResponsables() {
         JPanel tarjeta = Estilos.crearTarjeta();
         tarjeta.setLayout(new BorderLayout(10, 10));
@@ -103,6 +139,12 @@ public class PanelReportes extends JPanel {
         return tarjeta;
     }
 
+    /**
+     * Crea y configura el panel que contiene la tabla de préstamos vencidos, 
+     * aplicando colores de alerta (terracota) para indicar el estado crítico.
+     * 
+     * @return JPanel con estilo de tarjeta conteniendo la tabla de préstamos atrasados
+     */
     private JPanel crearTablaPrestamosVencidos() {
         JPanel tarjeta = Estilos.crearTarjeta();
         tarjeta.setLayout(new BorderLayout(10, 10));
@@ -130,6 +172,11 @@ public class PanelReportes extends JPanel {
         return tarjeta;
     }
 
+    /**
+     * Actualiza la información mostrada en el panel de reportes. 
+     * Recalcula la cantidad de socios por categoría y refresca los datos 
+     * de las tablas consultando nuevamente a la instancia de la biblioteca.
+     */
     public void actualizarReportes() {
         int totalEstudiantes = 0;
         int totalDocentes = 0;
@@ -145,7 +192,7 @@ public class PanelReportes extends JPanel {
         lblCantEstudiantes.setText(String.valueOf(totalEstudiantes));
         lblCantDocentes.setText(String.valueOf(totalDocentes));
 
-        // 1. Cargar lista de Docentes Responsables
+        //  Cargar lista de Docentes Responsables
         modeloDocentes.setRowCount(0);
         ArrayList<Docente> responsables = biblioteca.docentesResponsables();
         for (Docente doc : responsables) {
@@ -158,7 +205,7 @@ public class PanelReportes extends JPanel {
             modeloDocentes.addRow(fila);
         }
 
-        // 2. Cargar lista de Préstamos Vencidos
+        // Cargar lista de Préstamos Vencidos
         modeloVencidos.setRowCount(0);
         ArrayList<Prestamo> vencidos = biblioteca.prestamosVencidos();
         for (Prestamo p : vencidos) {
