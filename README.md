@@ -146,8 +146,22 @@ NOTA:
 IntegradorPOO/
 ├── README.md
 └── TP7/
-   ├── Clases/   → Definición de clases
-   ├── Interfaz/   → Intefaces gráficas
-   └── datos/   → Implementación y conexión con una base de datos
+    ├── datos/
+    │   ├── LibroDAO.java
+    │   ├── PrestamoDAO.java
+    │   └── SocioDAO.java
+    ├── gui/
+    │   ├── Estilos.java
+    │   ├── GestionBibliotecaGUI.java
+    │   ├── PanelReportes.java
+    │   └── PanelSocios.java
+    └── modelo/
+        ├── Biblioteca.java
+        ├── Docente.java
+        ├── Estudiante.java
+        ├── Libro.java
+        ├── LibroNoPrestadoException.java
+        ├── Prestamo.java
+        └── Socio.java
 
 
