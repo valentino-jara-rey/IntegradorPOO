@@ -1,7 +1,4 @@
-/*
-* Esta clase representa la abstraccion de un estudiante la cual extiende de la superclase socio
-*@autor Axel Antonio Lezcano
-*/
+package modelo;
 
 import java.util.ArrayList;
 
@@ -9,7 +6,7 @@ public class Estudiante extends Socio{
     private String carrera;
     
     /**
-     * Metodo contructor de la clase Estudiante
+     * Metodo contructor de la clase modelo.Estudiante
      * @param p_dniSocio
      * @param p_nombre
      * @param p_diasPrestamos
@@ -20,7 +17,7 @@ public class Estudiante extends Socio{
     }
 
     /**
-     * Metodo contructor sobrecargado de la clase Estudiante
+     * Metodo contructor sobrecargado de la clase modelo.Estudiante
      * @param p_dniSocio
      * @param p_nombre
      * @param p_diasPrestamos
@@ -49,7 +46,7 @@ public class Estudiante extends Socio{
     }
 
     /**
-     * Metodo que verifica si el Estudiante puede pedir otro prestamo
+     * Metodo que verifica si el modelo.Estudiante puede pedir otro prestamo
      * @return devuelve true si puede pedir, caso contrario devuelve false
      */
     public boolean puedePedir(){
@@ -62,10 +59,10 @@ public class Estudiante extends Socio{
 
     /**
      * Metodo que devuelve el tipo de la clase
-     * @return devuelve el tipo de la clase como string (Estudiante)
+     * @return devuelve el tipo de la clase como string (modelo.Estudiante)
      */
     public String soyDeLaClase(){
-        return "Estudiante";
+        return "modelo.Estudiante";
     }
 
 }
