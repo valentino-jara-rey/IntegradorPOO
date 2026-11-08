@@ -8,15 +8,42 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Clase que representa el panel de la interfaz gráfica destinado a la gestión 
+ * de los socios de la biblioteca. Permite el registro de nuevos socios, 
+ * su visualización en una tabla y la aplicación de premios a docentes responsables.
+ */
 public class PanelSocios extends JPanel {
+    
+    /** Referencia al sistema principal de la biblioteca para gestionar datos en memoria */
     private Biblioteca biblioteca;
-    private JTextField txtDni, txtNombre, txtEspecifico;
+    
+    /** Campo de texto para el ingreso del DNI del socio */
+    private JTextField txtDni;
+    /** Campo de texto para el ingreso del nombre completo del socio */
+    private JTextField txtNombre;
+    /** Campo de texto para el ingreso del dato específico (Carrera o Área) */
+    private JTextField txtEspecifico;
+    
+    /** Selector desplegable para definir si el socio es Estudiante o Docente */
     private JComboBox<String> cbTipoSocio;
+    /** Etiqueta dinámica que cambia su texto a "Carrera" o "Área" según el tipo de socio */
     private JLabel lblEspecifico;
+    
+    /** Tabla visual para listar a todos los socios registrados */
     private JTable tablaSocios;
+    /** Modelo de datos asociado a la tabla de socios */
     private DefaultTableModel modeloTabla;
+    
+    /** Objeto encargado de manejar la persistencia de los socios en la base de datos */
     private SocioDAO socioDAO;
 
+    /**
+     * Constructor del panel de gestión de socios. Inicializa los componentes visuales, 
+     * define la estructura del panel y carga los datos existentes.
+     * 
+     * @param biblioteca la instancia principal de la biblioteca con los datos del sistema
+     */
     public PanelSocios(Biblioteca biblioteca) {
         this.biblioteca = biblioteca;
         this.socioDAO = new SocioDAO();
@@ -41,6 +68,12 @@ public class PanelSocios extends JPanel {
         actualizarTabla();
     }
 
+    /**
+     * Crea y configura el panel que contiene el formulario de registro 
+     * para agregar nuevos socios al sistema.
+     * 
+     * @return JPanel con el diseño y los campos del formulario
+     */
     private JPanel crearPanelFormulario() {
         JPanel tarjeta = Estilos.crearTarjeta();
         tarjeta.setLayout(new GridBagLayout());
@@ -97,6 +130,12 @@ public class PanelSocios extends JPanel {
         return tarjeta;
     }
 
+    /**
+     * Crea y configura el panel que aloja la tabla con el listado de socios 
+     * y los botones de acción relacionados con los registros.
+     * 
+     * @return JPanel con el diseño de tarjeta conteniendo la tabla y botones
+     */
     private JPanel crearPanelTabla() {
         JPanel tarjeta = Estilos.crearTarjeta();
         tarjeta.setLayout(new BorderLayout(10, 10));
@@ -130,6 +169,11 @@ public class PanelSocios extends JPanel {
         return tarjeta;
     }
 
+    /**
+     * Extrae y valida los datos del formulario. Si la información es correcta 
+     * y el DNI no está duplicado, registra al nuevo socio tanto en la memoria 
+     * de la aplicación como en la base de datos.
+     */
     private void guardarSocio() {
         try {
             int dni = Integer.parseInt(txtDni.getText().trim());
@@ -142,20 +186,17 @@ public class PanelSocios extends JPanel {
                 return;
             }
 
-            // VALIDACIÓN: Verificar si ya existe un socio con ese DNI en la biblioteca
             if (biblioteca.buscarSocio(dni) != null) {
                 JOptionPane.showMessageDialog(this, "Ya existe un socio registrado con el DNI " + dni + ".", "Error de Duplicidad", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // 1. Agregar a la memoria RAM de Biblioteca
             if ("Estudiante".equals(tipo)) {
                 biblioteca.nuevoSocioEstudiante(dni, nombre, especifico);
             } else {
                 biblioteca.nuevoSocioDocente(dni, nombre, especifico);
             }
 
-            // 2. Persistir en SQLite
             Socio ultimoSocio = biblioteca.getSocios().get(biblioteca.getSocios().size() - 1);
             socioDAO.insertar(ultimoSocio);
 
@@ -171,6 +212,11 @@ public class PanelSocios extends JPanel {
         }
     }
 
+    /**
+     * Permite incrementar la cantidad de días de préstamo de un docente 
+     * seleccionado en la tabla, verificando previamente que califique 
+     * como responsable y actualizando el dato en la base de datos.
+     */
     private void premiarDocente() {
         int filaSeleccionada = tablaSocios.getSelectedRow();
         if (filaSeleccionada == -1) {
@@ -188,7 +234,6 @@ public class PanelSocios extends JPanel {
                         int diasExtra = Integer.parseInt(input.trim());
                         docente.cambiarDiasDePrestamos(diasExtra);
 
-                        // Actualizar en SQLite los días modificados del docente
                         socioDAO.actualizarDiasPrestamoDocente(docente);
 
                         actualizarTabla();
@@ -205,6 +250,10 @@ public class PanelSocios extends JPanel {
         }
     }
 
+    /**
+     * Refresca los datos mostrados en la tabla consultando la lista actualizada 
+     * de socios en la memoria del sistema de la biblioteca.
+     */
     public void actualizarTabla() {
         modeloTabla.setRowCount(0);
         ArrayList<Socio> socios = biblioteca.getSocios();
