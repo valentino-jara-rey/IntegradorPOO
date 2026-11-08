@@ -8,8 +8,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+/**
+ * Clase DAO (Data Access Object) encargada de gestionar el acceso y las operaciones CRUD
+ * relacionadas con la entidad Prestamo en la base de datos SQLite.
+ */
 public class PrestamoDAO {
 
+    /**
+     * Inserta un nuevo registro de préstamo en la base de datos SQLite con la fecha de retiro actual
+     * y dejando nula la fecha de devolución.
+     * 
+     * @param prestamo Objeto de tipo Prestamo que contiene los datos del socio, libro y fecha de retiro a registrar.
+     */
     public void insertar(Prestamo prestamo) {
         String sql = "INSERT INTO Prestamo (dni_socio, titulo_libro, fecha_retiro, fecha_devolucion) VALUES (?, ?, ?, NULL)";
         try (Connection conn = Conexion.getConexion();
@@ -30,6 +40,11 @@ public class PrestamoDAO {
         }
     }
 
+    /**
+     * Actualiza un préstamo activo en la base de datos SQLite asentando la fecha efectiva de devolución del libro.
+     * 
+     * @param prestamo Objeto de tipo Prestamo que contiene los datos de la devolución a asentar.
+     */
     public void registrarDevolucion(Prestamo prestamo) {
         String sql = "UPDATE Prestamo SET fecha_devolucion = ? WHERE dni_socio = ? AND titulo_libro = ? AND fecha_devolucion IS NULL";
         try (Connection conn = Conexion.getConexion();
@@ -50,6 +65,14 @@ public class PrestamoDAO {
         }
     }
 
+    /**
+     * Obtiene y reconstruye el historial completo de préstamos desde la base de datos SQLite,
+     * vinculando cada préstamo con las instancias correspondientes de Socio y Libro cargadas en memoria.
+     * 
+     * @param socios Lista de socios disponibles en memoria para realizar la vinculación.
+     * @param libros Lista de libros disponibles en memoria para realizar la vinculación.
+     * @return Lista de objetos de tipo Prestamo con las asociaciones de socios y libros restablecidas.
+     */
     public ArrayList<Prestamo> obtenerTodos(ArrayList<Socio> socios, ArrayList<Libro> libros) {
         ArrayList<Prestamo> lista = new ArrayList<>();
         String sql = "SELECT dni_socio, titulo_libro, fecha_retiro, fecha_devolucion FROM Prestamo";
