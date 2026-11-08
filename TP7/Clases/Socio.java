@@ -1,27 +1,32 @@
+package modelo;
+
 import java.util.ArrayList;
+import java.util.Calendar;
+
 /**
 * Esta clase representa un Socio
 * @author Valentino Jara Rey
 */
-public abstract class Socio {
+
+public abstract class Socio{
     private int dniSocio;
     private String nombre;
     private int diasPrestamo;
     private ArrayList<Prestamo> prestamos;
 
     /**
+     * Metodo Constructor de la clase modelo.Socio
      * @param p_dniSocio
      * @param p_nombre
      * @param p_diasPrestamos
-     * Metodo Constructor de la clase Socio
      */
     public Socio(int p_dniSocio, String p_nombre, int p_diasPrestamos){
-      this.setDni(p_dniSocio);
-      this.setNombre(p_nombre);
-      this.setDiasPrestamos(p_diasPrestamos);
-      this.setPrestamos(new ArrayList<Prestamo>());
+        this.setDni(p_dniSocio);
+        this.setNombre(p_nombre);
+        this.setDiasPrestamos(p_diasPrestamos);
+        this.setPrestamos(new ArrayList<Prestamo>());
     }
-    
+
     /**
      * @param p_dniSocio
      * @param p_nombre
@@ -29,7 +34,7 @@ public abstract class Socio {
      * @param p_prestamos
      * Metodo Constructor sobrecargado de la clase socio
      */
-    public Socio(int p_dniSocio, String p_nombre, int p_diasPrestamos, ArrayList<Prestamo> p_prestamos){
+    public Socio(int p_dniSocio, String p_nombre, int p_diasPrestamos, ArrayList<Prestamo> p_prestamos) {
         this.setDni(p_dniSocio);
         this.setNombre(p_nombre);
         this.setDiasPrestamos(p_diasPrestamos);
@@ -50,7 +55,7 @@ public abstract class Socio {
      * @return devuelve verdadero si se quito un prestamo con exito, caso contrario falso
      */
     public boolean quitarPrestamo(Prestamo p_prestamo){
-       return this.getPrestamos().remove(p_prestamo);
+        return this.getPrestamos().remove(p_prestamo);
     }
 
     /**
@@ -89,7 +94,7 @@ public abstract class Socio {
      * Getter del atributo diasPrestamo
      * @return devuelve el atributo diasPrestamo
      */
-    public int getDiasPrestamo() {
+    public int getDiasPrestamo(){
         return this.diasPrestamo;
     }
 
@@ -97,7 +102,7 @@ public abstract class Socio {
      * Getter del atributo dniSocio
      * @return devuelve el atributo dniSocio
      */
-    public int getDniSocio() {
+    public int getDniSocio(){
         return this.dniSocio;
     }
 
@@ -105,7 +110,7 @@ public abstract class Socio {
      * Getter del atributo prestamos
      * @return devuelve el atributo prestamos
      */
-    public ArrayList<Prestamo> getPrestamos() {
+    public ArrayList<Prestamo> getPrestamos(){
         return this.prestamos;
     }
 
@@ -113,7 +118,7 @@ public abstract class Socio {
      * Getter del atributo nombre
      * @return devuelve el atributo nombre
      */
-    public String getNombre() {
+    public String getNombre(){
         return this.nombre;
     }
 
@@ -121,8 +126,15 @@ public abstract class Socio {
      * Metodo que calcula la cantidad
      * @return cantidad de libros prestados
      */
+
     public int cantLibrosPrestados(){
-      return this.getPrestamos().size();
+        int librosPrestados = 0;
+        for(Prestamo prestamo: this.getPrestamos()){
+            if(prestamo.getFechaDevolucion() == null){
+                librosPrestados++;
+            }
+        }
+        return librosPrestados;
     }
 
     /**
@@ -130,22 +142,28 @@ public abstract class Socio {
      * @return devuelve false si hay almenos un prestamo vencido, caso contrario false
      */
     public boolean puedePedir(){
-        boolean ningunoVencido = true;
+        boolean puedePedir = true;
         Calendar fechaHoy = Calendar.getInstance();
-        for(Prestamo prestamo : this.getPrestamos()){
-            if(prestamo.vencido(fechaHoy)){
-                ningunoVencido = false;
+        for(Prestamo prestamo: this.getPrestamos()){
+            //El prestamo no fue devuelto aun
+            boolean esPrestamoActual = prestamo.getFechaDevolucion() == null;
+            //el prestamo esta vencido
+            boolean esPrestamoVencido = prestamo.vencido(fechaHoy);
+            if(esPrestamoActual && esPrestamoVencido){
+                puedePedir = false;
             }
         }
-        return ningunoVencido;
+
+        return puedePedir;
     }
 
-    /**    
+    /**
      * Metodo que concatena los datos comunes de un socio
      * @return devuelve una cadena de los datos generales de un socio
      */
     public String toString(){
-        return "D.N.I.: " + this.getDniSocio() +  " || " + this.getNombre() + " || Libros prestados: " + this.cantLibrosPrestados();
+        return "D.N.I.: " + this.getDniSocio() +  " || " + this.getNombre() + "(" + this.soyDeLaClase() + ") || Libros Prestados: "
+                + this.cantLibrosPrestados();
     }
 
     public abstract String soyDeLaClase();
