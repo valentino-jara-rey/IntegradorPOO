@@ -157,6 +157,7 @@ public class Biblioteca{
       Prestamo prestamo = Prestamo(p_fechaRetiro, p_socio, p_libro);
       p_socio.agregarPrestamo(prestamo);
       p_libro.agregarPrestamo(prestamo);
+      return true;
     }
 
     /**
@@ -215,18 +216,16 @@ public class Biblioteca{
      * @return ArrayList con los docente responsables
      */
     public ArrayList<Docente> docentesResponsables(){
-      ArrayList<Docente> docentesResponsables = new ArrayList<Docente>();
-      for(Socio socio: this.getSocios()){
-        if(socio.soyDeLaClase().equalsToIgnoreCase("Docente")){
-          docentes.add((Docente) socio);
+    ArrayList<Docente> docentesResp = new ArrayList<Docente>();
+    for(Socio socio : this.getSocios()){
+        if(socio.soyDeLaClase().equalsIgnoreCase("Docente")){
+            Docente docente = (Docente) socio;
+            if(docente.esResponsable()){
+                docentesResp.add(docente);
+            }
         }
-      }
-      for(Docente docente: docentesResponsables){
-        if(!docente.esResponsable()){
-          docentesResponsables.remove(docente);
-        }
-      }
-      return docentesResponsables;
+    }
+    return docentesResp;
     }
 
   /**
@@ -235,14 +234,80 @@ public class Biblioteca{
    * @return devuelve el nombre del socio quien tiene el libro, sino lanza una excepcion
    */  
   public String quienTieneElLibro(Libro p_libro){
-     try{
-       if(!libro.prestado()){
-         throw new LibroNoPrestadoException("El libro se encuentra en la biblioteca");
-       }
-       return socio.getNombre();
+    try{
+        if(!p_libro.prestado()){
+            throw new LibroNoPrestadoException("El libro se encuentra en la biblioteca");
+        }
+        return p_libro.ultimoPrestamo().getSocio().getNombre();
     } 
-      catch (LibroNoPrestadoException e){
-        System.out.print("El libro  no se puede devolver ya que se encuentra en la biblioteca");
+    catch (LibroNoPrestadoException e){
+        System.out.print(e.getMessage());
         return "";
     }
   }
+/**
+     * Metodo que devuelve un String con la informacion de todos los socios
+     * @return String con el listado de socios
+     */
+    public String listaDeSocios() {
+        String infoSocios = "";
+        for (Socio socio : this.getSocios()) {
+            infoSocios += socio.toString() + "\n";
+        }
+        return infoSocios;
+    }
+
+    /**
+     * Metodo que busca y devuelve un socio segun su DNI
+     * @param p_dni
+     * @return el objeto Socio encontrado o null
+     */
+    public Socio buscarSocio(int p_dni) {
+        Socio socioBuscado = null;
+        for (Socio socio : this.getSocios()) {
+            if (socio.getDniSocio() == p_dni) {
+                socioBuscado = socio;
+            }
+        }
+        return socioBuscado;
+    }
+
+    /**
+     * Metodo que devuelve un String con los titulos o informacion de los libros
+     * @return String con la lista de titulos
+     */
+    public String listaDeTitulos() {
+        String titulos = "";
+        for (Libro libro : this.getLibros()) {
+            titulos += libro.toString() + "\n";
+        }
+        return titulos;
+    }
+
+    /**
+     * Metodo que devuelve un String con el estado de prestamo de cada libro
+     * @return String con el listado de libros y su estado
+     */
+    public String listaDeLibros() {
+        String libros = "";
+        for (Libro libro : this.getLibros()) {
+            if (libro.prestado()) {
+                libros += libro.toString() + " || Prestado: Si\n";
+            } else {
+                libros += libro.toString() + " || Prestado: No\n";
+            }
+        }
+        return libros;
+    }
+
+    /**
+     * Metodo que devuelve un String con la informacion de los docentes responsables
+     * @return String con el listado de docentes responsables
+     */
+    public String listaDeDocentesResponsables() {
+        String docentesResponsables = "";
+        for (Docente docente : this.docentesResponsables()) {
+            docentesResponsables += docente.toString() + "\n";
+        }
+        return docentesResponsables;
+    }
